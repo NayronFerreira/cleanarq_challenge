@@ -3,6 +3,7 @@ package usecase
 import (
 	"github.com/NayronFerreira/cleanArq_challenge/internal/entity"
 	"github.com/NayronFerreira/cleanArq_challenge/pkg/events"
+	"github.com/google/uuid"
 )
 
 type OrderInputDTO struct {
@@ -37,8 +38,10 @@ func NewCreateOrderUseCase(
 }
 
 func (c *CreateOrderUseCase) Execute(input OrderInputDTO) (OrderOutputDTO, error) {
+	id := uuid.New().String()
+
 	order := entity.Order{
-		ID:    input.ID,
+		ID:    id,
 		Price: input.Price,
 		Tax:   input.Tax,
 	}

@@ -10,7 +10,6 @@ type Order struct {
 }
 
 type OrderInput struct {
-	ID    string  `json:"id"`
 	Price float64 `json:"Price"`
 	Tax   float64 `json:"Tax"`
 }
