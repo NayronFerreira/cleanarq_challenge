@@ -6,7 +6,6 @@ type Order {
 }
 
 input OrderInput {
-    id : String!
     Price: Float!
     Tax: Float!
 }
