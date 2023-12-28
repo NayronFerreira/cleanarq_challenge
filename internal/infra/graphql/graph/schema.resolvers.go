@@ -47,6 +47,23 @@ func (r *queryResolver) ListOrders(ctx context.Context) ([]*model.Order, error) 
 	return orders, nil
 }
 
+// GetOrderByID is the resolver for the getOrderByID field.
+func (r *queryResolver) GetOrderByID(ctx context.Context, id string) (*model.Order, error) {
+	dto := usecase.OrderInputDTO{
+		ID: id,
+	}
+	output, err := r.GetOrderByIDUseCase.Execute(dto)
+	if err != nil {
+		return nil, err
+	}
+	return &model.Order{
+		ID:         output.ID,
+		Price:      float64(output.Price),
+		Tax:        float64(output.Tax),
+		FinalPrice: float64(output.FinalPrice),
+	}, nil
+}
+
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 

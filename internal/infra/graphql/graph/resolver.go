@@ -7,6 +7,7 @@ import "github.com/NayronFerreira/cleanArq_challenge/internal/usecase"
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	CreateOrderUseCase usecase.CreateOrderUseCase
-	ListOrderUseCase   usecase.ListOrderUseCase
+	CreateOrderUseCase  usecase.CreateOrderUseCase
+	ListOrderUseCase    usecase.ListOrderUseCase
+	GetOrderByIDUseCase usecase.GetOrderByIDUseCase
 }
