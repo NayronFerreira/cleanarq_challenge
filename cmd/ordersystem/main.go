@@ -52,6 +52,7 @@ func main() {
 
 	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
 	listOrdersUseCase := NewListOrderUseCase(db, eventDispatcher)
+	getOrderByID := NewGetOrderByIDUseCase(db, eventDispatcher)
 	// getOrderByIDUseCase := NewGetOrderByIDUseCase(db, eventDispatcher)
 
 	webserver := webserver.NewWebServer(configs.WebServerPort)
@@ -70,7 +71,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	orderService := service.NewOrderService(*createOrderUseCase, *listOrdersUseCase)
+	orderService := service.NewOrderService(*createOrderUseCase, *listOrdersUseCase, *getOrderByID)
 	pb.RegisterOrderServiceServer(grpcServer, orderService)
 
 	reflection.Register(grpcServer)

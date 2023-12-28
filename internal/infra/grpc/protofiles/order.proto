@@ -22,7 +22,16 @@ message ListOrdersResponse {
   repeated CreateOrderResponse orders = 1;
 }
 
+message GetOrderByIdRequest {
+  string id = 1;
+}
+
+message GetOrderByIdResponse {
+  CreateOrderResponse order = 1;
+}
+
 service OrderService {
   rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
-  rpc ListOrders (ListOrdersRequest) returns (ListOrdersResponse) {}
+  rpc ListOrders (ListOrdersRequest) returns (ListOrdersResponse);
+  rpc GetOrderById (GetOrderByIdRequest) returns (GetOrderByIdResponse);
 }
