@@ -9,14 +9,19 @@ import (
 
 type OrderService struct {
 	pb.UnimplementedOrderServiceServer
-	CreateOrderUseCase usecase.CreateOrderUseCase
-	ListOrdersUseCase  usecase.ListOrderUseCase
+	CreateOrderUseCase  usecase.CreateOrderUseCase
+	ListOrdersUseCase   usecase.ListOrderUseCase
+	GetOrderByIDUseCase usecase.GetOrderByIDUseCase
 }
 
-func NewOrderService(createOrderUseCase usecase.CreateOrderUseCase, listOrdersUseCase usecase.ListOrderUseCase) *OrderService {
+func NewOrderService(
+	createOrderUseCase usecase.CreateOrderUseCase,
+	listOrdersUseCase usecase.ListOrderUseCase,
+	getOrderIdUseCase usecase.GetOrderByIDUseCase) *OrderService {
 	return &OrderService{
-		CreateOrderUseCase: createOrderUseCase,
-		ListOrdersUseCase:  listOrdersUseCase,
+		CreateOrderUseCase:  createOrderUseCase,
+		ListOrdersUseCase:   listOrdersUseCase,
+		GetOrderByIDUseCase: getOrderIdUseCase,
 	}
 }
 
@@ -53,5 +58,25 @@ func (s *OrderService) ListOrders(ctx context.Context, in *pb.ListOrdersRequest)
 	}
 	return &pb.ListOrdersResponse{
 		Orders: orders,
+	}, nil
+}
+
+func (s *OrderService) GetOrderById(ctx context.Context, in *pb.GetOrderByIdRequest) (*pb.GetOrderByIdResponse, error) {
+	dto := usecase.OrderInputDTO{
+		ID: in.Id,
+	}
+	output, err := s.GetOrderByIDUseCase.Execute(dto)
+	if err != nil {
+		return nil, err
+	}
+	orderRes := pb.CreateOrderResponse{
+		Id:         output.ID,
+		Price:      float32(output.Price),
+		Tax:        float32(output.Tax),
+		FinalPrice: float32(output.FinalPrice),
+	}
+
+	return &pb.GetOrderByIdResponse{
+		Order: &orderRes,
 	}, nil
 }
