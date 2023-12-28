@@ -10,19 +10,19 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-type OrderCreatedHandler struct {
+type OrderListHandler struct {
 	RabbitMQChannel *amqp.Channel
 }
 
-func NewOrderCreatedHandler(rabbitMQChannel *amqp.Channel) *OrderCreatedHandler {
-	return &OrderCreatedHandler{
+func NewOrderListHandler(rabbitMQChannel *amqp.Channel) *OrderListHandler {
+	return &OrderListHandler{
 		RabbitMQChannel: rabbitMQChannel,
 	}
 }
 
-func (h *OrderCreatedHandler) Handle(event events.EventInterface, wg *sync.WaitGroup) {
+func (h *OrderListHandler) Handle(event events.EventInterface, wg *sync.WaitGroup) {
 	defer wg.Done()
-	fmt.Printf("Order created: %v", event.GetPayload())
+	fmt.Printf("Order Listed: %v", event.GetPayload())
 	jsonOutput, _ := json.Marshal(event.GetPayload())
 
 	msgRabbitmq := amqp.Publishing{
@@ -33,7 +33,7 @@ func (h *OrderCreatedHandler) Handle(event events.EventInterface, wg *sync.WaitG
 	h.RabbitMQChannel.PublishWithContext(
 		context.Background(),
 		"amq.direct",
-		"cretae_order",
+		"list",
 		false,
 		false,
 		msgRabbitmq,
