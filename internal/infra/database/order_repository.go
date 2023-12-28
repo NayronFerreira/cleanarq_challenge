@@ -56,3 +56,20 @@ func (r *OrderRepository) GetOrderByID(id string) (*entity.Order, error) {
 	}
 	return order, nil
 }
+
+func (r *OrderRepository) UpdateOrder(order *entity.Order) (*entity.Order, error) {
+	stmt, err := r.Db.Prepare("UPDATE orders SET price = ?, tax = ?, final_price = ? WHERE id = ?")
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = stmt.Exec(order.Price, order.Tax, order.FinalPrice, order.ID)
+	if err != nil {
+		return nil, err
+	}
+	orderUpdate, err := r.GetOrderByID(order.ID)
+	if err != nil {
+		return nil, err
+	}
+	return orderUpdate, nil
+}
