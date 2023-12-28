@@ -46,9 +46,13 @@ func main() {
 	eventDispatcher.Register("OrderList", &handler.OrderListHandler{
 		RabbitMQChannel: rabbitMQChannel,
 	})
+	eventDispatcher.Register("GetOrderByID", &handler.GetOrderByIDHandler{
+		RabbitMQChannel: rabbitMQChannel,
+	})
 
 	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
 	listOrdersUseCase := NewListOrderUseCase(db, eventDispatcher)
+	// getOrderByIDUseCase := NewGetOrderByIDUseCase(db, eventDispatcher)
 
 	webserver := webserver.NewWebServer(configs.WebServerPort)
 
@@ -57,6 +61,9 @@ func main() {
 
 	webListOrdersHandler := NewWebListOrdersHandler(db, eventDispatcher)
 	webserver.AddHandler("/orders", webListOrdersHandler.List, "GET")
+
+	webGetOrderByIDHandler := NewWebGetOrderByIDHandler(db, eventDispatcher)
+	webserver.AddHandler("/orderbyid", webGetOrderByIDHandler.GetOrderByID, "GET")
 
 	fmt.Println("Starting web server on port", configs.WebServerPort)
 	go webserver.Start()

@@ -24,8 +24,10 @@ var setEventDispatcherDependency = wire.NewSet(
 	events.NewEventDispatcher,
 	event.NewOrderCreated,
 	event.NewOrderList,
+	event.NewGetOrderByID,
 	wire.Bind(new(events.EventInterface), new(*event.OrderCreated)),
 	wire.Bind(new(events.EventInterface), new(*event.OrderList)),
+	wire.Bind(new(events.EventInterface), new(*event.GetOrderByID)),
 	wire.Bind(new(events.EventDispatcherInterface), new(*events.EventDispatcher)),
 )
 
@@ -37,6 +39,11 @@ var setOrderCreatedEvent = wire.NewSet(
 var setOrderListedEvent = wire.NewSet(
 	event.NewOrderList,
 	wire.Bind(new(events.EventInterface), new(*event.OrderList)),
+)
+
+var setGetOrderByIDEvent = wire.NewSet(
+	event.NewGetOrderByID,
+	wire.Bind(new(events.EventInterface), new(*event.GetOrderByID)),
 )
 
 func NewCreateOrderUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *usecase.CreateOrderUseCase {
@@ -57,6 +64,15 @@ func NewListOrderUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInter
 	return &usecase.ListOrderUseCase{}
 }
 
+func NewGetOrderByIDUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *usecase.GetOrderByIDUseCase {
+	wire.Build(
+		setOrderRepositoryDependency,
+		setGetOrderByIDEvent,
+		usecase.NewGetOrderByIDUseCase,
+	)
+	return &usecase.GetOrderByIDUseCase{}
+}
+
 func NewWebOrderHandler(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *web.WebOrderHandler {
 	wire.Build(
 		setOrderRepositoryDependency,
@@ -73,4 +89,13 @@ func NewWebListOrdersHandler(db *sql.DB, eventDispatcher events.EventDispatcherI
 		web.NewWebListOrdersHandler,
 	)
 	return &web.WebListOrdersHandler{}
+}
+
+func NewWebGetOrderByIDHandler(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *web.WebGetOrderByIDHandler {
+	wire.Build(
+		setOrderRepositoryDependency,
+		setGetOrderByIDEvent,
+		web.NewWebGetOrderByIDHandler,
+	)
+	return &web.WebGetOrderByIDHandler{}
 }

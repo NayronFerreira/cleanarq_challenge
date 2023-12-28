@@ -43,3 +43,16 @@ func (r *OrderRepository) GetOrders() ([]*entity.Order, error) {
 	}
 	return orders, nil
 }
+
+func (r *OrderRepository) GetOrderByID(id string) (*entity.Order, error) {
+	row := r.Db.QueryRow("SELECT * FROM orders WHERE id = ?", id)
+	order := &entity.Order{}
+	if err := row.Scan(&order.ID, &order.Price, &order.Tax, &order.FinalPrice); err != nil {
+		if err == sql.ErrNoRows {
+			// Não há linhas correspondentes na tabela
+			return nil, nil
+		}
+		return nil, err
+	}
+	return order, nil
+}

@@ -37,6 +37,13 @@ func NewListOrderUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInter
 	return listOrderUseCase
 }
 
+func NewGetOrderByIDUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *usecase.GetOrderByIDUseCase {
+	orderRepository := database.NewOrderRepository(db)
+	getOrderByID := event.NewGetOrderByID()
+	getOrderByIDUseCase := usecase.NewGetOrderByIDUseCase(orderRepository, getOrderByID, eventDispatcher)
+	return getOrderByIDUseCase
+}
+
 func NewWebOrderHandler(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *web.WebOrderHandler {
 	orderRepository := database.NewOrderRepository(db)
 	orderCreated := event.NewOrderCreated()
@@ -51,13 +58,21 @@ func NewWebListOrdersHandler(db *sql.DB, eventDispatcher events.EventDispatcherI
 	return webListOrdersHandler
 }
 
+func NewWebGetOrderByIDHandler(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *web.WebGetOrderByIDHandler {
+	orderRepository := database.NewOrderRepository(db)
+	getOrderByID := event.NewGetOrderByID()
+	webGetOrderByIDHandler := web.NewWebGetOrderByIDHandler(eventDispatcher, orderRepository, getOrderByID)
+	return webGetOrderByIDHandler
+}
+
 // wire.go:
 
 var setOrderRepositoryDependency = wire.NewSet(database.NewOrderRepository, wire.Bind(new(entity.OrderRepositoryInterface), new(*database.OrderRepository)))
 
-var setEventDispatcherDependency = wire.NewSet(
-	events.NewEventDispatcher, event.NewOrderCreated, event.NewOrderList, wire.Bind(new(events.EventInterface), new(*event.OrderCreated)), wire.Bind(new(events.EventInterface), new(*event.OrderList)), wire.Bind(new(events.EventDispatcherInterface), new(*events.EventDispatcher)))
+var setEventDispatcherDependency = wire.NewSet(events.NewEventDispatcher, event.NewOrderCreated, event.NewOrderList, event.NewGetOrderByID, wire.Bind(new(events.EventInterface), new(*event.OrderCreated)), wire.Bind(new(events.EventInterface), new(*event.OrderList)), wire.Bind(new(events.EventInterface), new(*event.GetOrderByID)), wire.Bind(new(events.EventDispatcherInterface), new(*events.EventDispatcher)))
 
 var setOrderCreatedEvent = wire.NewSet(event.NewOrderCreated, wire.Bind(new(events.EventInterface), new(*event.OrderCreated)))
 
 var setOrderListedEvent = wire.NewSet(event.NewOrderList, wire.Bind(new(events.EventInterface), new(*event.OrderList)))
+
+var setGetOrderByIDEvent = wire.NewSet(event.NewGetOrderByID, wire.Bind(new(events.EventInterface), new(*event.GetOrderByID)))
