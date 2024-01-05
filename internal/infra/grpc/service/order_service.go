@@ -12,16 +12,19 @@ type OrderService struct {
 	CreateOrderUseCase  usecase.CreateOrderUseCase
 	ListOrdersUseCase   usecase.ListOrderUseCase
 	GetOrderByIDUseCase usecase.GetOrderByIDUseCase
+	UpdateOrderUseCase  usecase.UpdateOrderUseCase
 }
 
 func NewOrderService(
 	createOrderUseCase usecase.CreateOrderUseCase,
 	listOrdersUseCase usecase.ListOrderUseCase,
-	getOrderIdUseCase usecase.GetOrderByIDUseCase) *OrderService {
+	getOrderIdUseCase usecase.GetOrderByIDUseCase,
+	updateOrderUseCase usecase.UpdateOrderUseCase) *OrderService {
 	return &OrderService{
 		CreateOrderUseCase:  createOrderUseCase,
 		ListOrdersUseCase:   listOrdersUseCase,
 		GetOrderByIDUseCase: getOrderIdUseCase,
+		UpdateOrderUseCase:  updateOrderUseCase,
 	}
 }
 
@@ -78,5 +81,23 @@ func (s *OrderService) GetOrderById(ctx context.Context, in *pb.GetOrderByIdRequ
 
 	return &pb.GetOrderByIdResponse{
 		Order: &orderRes,
+	}, nil
+}
+
+func (s *OrderService) UpdateOrder(ctx context.Context, in *pb.UpdateOrderRequest) (*pb.UpdateOrderResponse, error) {
+	dto := usecase.OrderInputDTO{
+		ID:    in.Id,
+		Price: float64(in.Price),
+		Tax:   float64(in.Tax),
+	}
+	output, err := s.UpdateOrderUseCase.Execute(dto)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UpdateOrderResponse{
+		Id:         output.ID,
+		Price:      float32(output.Price),
+		Tax:        float32(output.Tax),
+		FinalPrice: float32(output.FinalPrice),
 	}, nil
 }
