@@ -13,3 +13,9 @@ type OrderInput struct {
 	Price float64 `json:"Price"`
 	Tax   float64 `json:"Tax"`
 }
+
+type UpdateOrderInput struct {
+	ID    string  `json:"id"`
+	Price float64 `json:"Price"`
+	Tax   float64 `json:"Tax"`
+}

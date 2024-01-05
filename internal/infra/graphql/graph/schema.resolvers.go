@@ -29,6 +29,25 @@ func (r *mutationResolver) CreateOrder(ctx context.Context, input *model.OrderIn
 	}, nil
 }
 
+// UpdateOrder is the resolver for the updateOrder field.
+func (r *mutationResolver) UpdateOrder(ctx context.Context, input *model.UpdateOrderInput) (*model.Order, error) {
+	dto := usecase.OrderInputDTO{
+		ID:    input.ID,
+		Price: float64(input.Price),
+		Tax:   float64(input.Tax),
+	}
+	output, err := r.UpdateOrderUseCase.Execute(dto)
+	if err != nil {
+		return nil, err
+	}
+	return &model.Order{
+		ID:         output.ID,
+		Price:      float64(output.Price),
+		Tax:        float64(output.Tax),
+		FinalPrice: float64(output.FinalPrice),
+	}, nil
+}
+
 // ListOrders is the resolver for the ListOrders field.
 func (r *queryResolver) ListOrders(ctx context.Context) ([]*model.Order, error) {
 	output, err := r.ListOrderUseCase.Execute()

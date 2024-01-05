@@ -10,6 +10,12 @@ input OrderInput {
     Tax: Float!
 }
 
+input UpdateOrderInput {
+    id: String!
+    Price: Float!
+    Tax: Float!
+}
+
 type Query {
     ListOrders: [Order]
     getOrderByID(id: String!): Order
@@ -17,4 +23,5 @@ type Query {
 
 type Mutation {
     createOrder(input: OrderInput): Order
+    updateOrder(input: UpdateOrderInput): Order
 }
