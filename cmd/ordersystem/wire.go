@@ -26,10 +26,12 @@ var setEventDispatcherDependency = wire.NewSet(
 	event.NewOrderList,
 	event.NewGetOrderByID,
 	event.NewOrderUpdate,
+	event.NewDeleteOrder,
 	wire.Bind(new(events.EventInterface), new(*event.OrderCreated)),
 	wire.Bind(new(events.EventInterface), new(*event.OrderList)),
 	wire.Bind(new(events.EventInterface), new(*event.GetOrderByID)),
 	wire.Bind(new(events.EventInterface), new(*event.OrderUpdate)),
+	wire.Bind(new(events.EventInterface), new(*event.DeleteOrder)),
 	wire.Bind(new(events.EventDispatcherInterface), new(*events.EventDispatcher)),
 )
 
@@ -51,6 +53,11 @@ var setGetOrderByIDEvent = wire.NewSet(
 var setUpdateOrderEvent = wire.NewSet(
 	event.NewOrderUpdate,
 	wire.Bind(new(events.EventInterface), new(*event.OrderUpdate)),
+)
+
+var setDeleteOrderEvent = wire.NewSet(
+	event.NewDeleteOrder,
+	wire.Bind(new(events.EventInterface), new(*event.DeleteOrder)),
 )
 
 func NewCreateOrderUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *usecase.CreateOrderUseCase {
@@ -89,6 +96,15 @@ func NewUpdateOrderUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInt
 	return &usecase.UpdateOrderUseCase{}
 }
 
+func NewDeleteOrderUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *usecase.DeleteOrderUseCase {
+	wire.Build(
+		setOrderRepositoryDependency,
+		setDeleteOrderEvent,
+		usecase.NewDeleteOrderUseCase,
+	)
+	return &usecase.DeleteOrderUseCase{}
+}
+
 func NewWebOrderHandler(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *web.WebOrderHandler {
 	wire.Build(
 		setOrderRepositoryDependency,
@@ -123,4 +139,13 @@ func NewWebUpdateOrderHandler(db *sql.DB, eventDispatcher events.EventDispatcher
 		web.NewWebUpdateOrderHandler,
 	)
 	return &web.WebUpdateOrderHandler{}
+}
+
+func NewWebDeleteOrderHandler(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *web.WebDeleteOrderHandler {
+	wire.Build(
+		setOrderRepositoryDependency,
+		setDeleteOrderEvent,
+		web.NewWebDeleteOrderHandler,
+	)
+	return &web.WebDeleteOrderHandler{}
 }

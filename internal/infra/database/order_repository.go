@@ -73,3 +73,16 @@ func (r *OrderRepository) UpdateOrder(order *entity.Order) (*entity.Order, error
 	}
 	return orderUpdate, nil
 }
+
+func (r *OrderRepository) DeleteOrder(id string) error {
+	stmt, err := r.Db.Prepare("DELETE FROM orders WHERE id = ?")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

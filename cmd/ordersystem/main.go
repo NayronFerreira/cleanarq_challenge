@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+
 	"net"
 	"net/http"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/NayronFerreira/cleanArq_challenge/configs"
 	"github.com/NayronFerreira/cleanArq_challenge/internal/infra/event/handler"
+
 	"github.com/NayronFerreira/cleanArq_challenge/internal/infra/graphql/graph"
 	"github.com/NayronFerreira/cleanArq_challenge/internal/infra/grpc/pb"
 	"github.com/NayronFerreira/cleanArq_challenge/internal/infra/grpc/service"
@@ -52,6 +54,9 @@ func main() {
 	eventDispatcher.Register("OrderUpdate", &handler.OrderUpdateHandler{
 		RabbitMQChannel: rabbitMQChannel,
 	})
+	eventDispatcher.Register("DeleteOrder", &handler.DeleteOrderHandler{
+		RabbitMQChannel: rabbitMQChannel,
+	})
 
 	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
 	listOrdersUseCase := NewListOrderUseCase(db, eventDispatcher)
@@ -71,6 +76,9 @@ func main() {
 
 	webOrderUpdateHandler := NewWebUpdateOrderHandler(db, eventDispatcher)
 	webserver.AddHandler("/order/update", webOrderUpdateHandler.UpdateOrder, "POST")
+
+	webDeleteUpdateHandler := NewWebDeleteOrderHandler(db, eventDispatcher)
+	webserver.AddHandler("/order/delete", webDeleteUpdateHandler.DeleteOrder, "DELETE")
 
 	fmt.Println("Starting web server on port", configs.WebServerPort)
 	go webserver.Start()
