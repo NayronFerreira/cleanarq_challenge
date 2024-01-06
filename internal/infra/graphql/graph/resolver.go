@@ -11,4 +11,5 @@ type Resolver struct {
 	ListOrderUseCase    usecase.ListOrderUseCase
 	GetOrderByIDUseCase usecase.GetOrderByIDUseCase
 	UpdateOrderUseCase  usecase.UpdateOrderUseCase
+	DeleteOrderUseCase  usecase.DeleteOrderUseCase
 }

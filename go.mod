@@ -6,6 +6,7 @@ require (
 	github.com/99designs/gqlgen v0.17.41
 	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-sql-driver/mysql v1.7.1
+	github.com/golang/protobuf v1.5.3
 	github.com/google/uuid v1.4.0
 	github.com/google/wire v0.5.0
 	github.com/rabbitmq/amqp091-go v1.9.0
@@ -18,7 +19,6 @@ require (
 require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.3 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

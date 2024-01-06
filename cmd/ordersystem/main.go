@@ -103,6 +103,7 @@ func main() {
 		ListOrderUseCase:    *listOrdersUseCase,
 		GetOrderByIDUseCase: *getOrderByID,
 		UpdateOrderUseCase:  *updateOrderUseCase,
+		DeleteOrderUseCase:  *deleteOrderUseCase,
 	}}))
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)

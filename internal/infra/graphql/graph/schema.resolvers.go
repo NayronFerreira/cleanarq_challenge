@@ -48,6 +48,20 @@ func (r *mutationResolver) UpdateOrder(ctx context.Context, input *model.UpdateO
 	}, nil
 }
 
+// DeleteOrder is the resolver for the deleteOrder field.
+func (r *mutationResolver) DeleteOrder(ctx context.Context, input *model.DeleteOrderInput) (*model.Order, error) {
+	dto := usecase.OrderInputDTO{
+		ID: input.ID,
+	}
+	err := r.DeleteOrderUseCase.Execute(dto)
+	if err != nil {
+		return nil, err
+	}
+	return &model.Order{
+		ID: input.ID,
+	}, nil
+}
+
 // ListOrders is the resolver for the ListOrders field.
 func (r *queryResolver) ListOrders(ctx context.Context) ([]*model.Order, error) {
 	output, err := r.ListOrderUseCase.Execute()
