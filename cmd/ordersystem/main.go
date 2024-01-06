@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+
 	"net"
 	"net/http"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/NayronFerreira/cleanArq_challenge/configs"
 	"github.com/NayronFerreira/cleanArq_challenge/internal/infra/event/handler"
+
 	"github.com/NayronFerreira/cleanArq_challenge/internal/infra/graphql/graph"
 	"github.com/NayronFerreira/cleanArq_challenge/internal/infra/grpc/pb"
 	"github.com/NayronFerreira/cleanArq_challenge/internal/infra/grpc/service"
@@ -52,11 +54,15 @@ func main() {
 	eventDispatcher.Register("OrderUpdate", &handler.OrderUpdateHandler{
 		RabbitMQChannel: rabbitMQChannel,
 	})
+	eventDispatcher.Register("DeleteOrder", &handler.DeleteOrderHandler{
+		RabbitMQChannel: rabbitMQChannel,
+	})
 
 	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
 	listOrdersUseCase := NewListOrderUseCase(db, eventDispatcher)
 	getOrderByID := NewGetOrderByIDUseCase(db, eventDispatcher)
-	// updateOrderUseCase := NewUpdateOrderUseCase(db, eventDispatcher)
+	updateOrderUseCase := NewUpdateOrderUseCase(db, eventDispatcher)
+	deleteOrderUseCase := NewDeleteOrderUseCase(db, eventDispatcher)
 
 	webserver := webserver.NewWebServer(configs.WebServerPort)
 
@@ -72,12 +78,15 @@ func main() {
 	webOrderUpdateHandler := NewWebUpdateOrderHandler(db, eventDispatcher)
 	webserver.AddHandler("/order/update", webOrderUpdateHandler.UpdateOrder, "POST")
 
+	webDeleteUpdateHandler := NewWebDeleteOrderHandler(db, eventDispatcher)
+	webserver.AddHandler("/order/delete", webDeleteUpdateHandler.DeleteOrder, "DELETE")
+
 	fmt.Println("Starting web server on port", configs.WebServerPort)
 	go webserver.Start()
 
 	grpcServer := grpc.NewServer()
 
-	orderService := service.NewOrderService(*createOrderUseCase, *listOrdersUseCase, *getOrderByID)
+	orderService := service.NewOrderService(*createOrderUseCase, *listOrdersUseCase, *getOrderByID, *updateOrderUseCase, *deleteOrderUseCase)
 	pb.RegisterOrderServiceServer(grpcServer, orderService)
 
 	reflection.Register(grpcServer)
@@ -93,6 +102,8 @@ func main() {
 		CreateOrderUseCase:  *createOrderUseCase,
 		ListOrderUseCase:    *listOrdersUseCase,
 		GetOrderByIDUseCase: *getOrderByID,
+		UpdateOrderUseCase:  *updateOrderUseCase,
+		DeleteOrderUseCase:  *deleteOrderUseCase,
 	}}))
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)

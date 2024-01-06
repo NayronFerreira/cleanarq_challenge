@@ -51,6 +51,13 @@ func NewUpdateOrderUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInt
 	return updateOrderUseCase
 }
 
+func NewDeleteOrderUseCase(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *usecase.DeleteOrderUseCase {
+	orderRepository := database.NewOrderRepository(db)
+	deleteOrder := event.NewDeleteOrder()
+	deleteOrderUseCase := usecase.NewDeleteOrderUseCase(orderRepository, deleteOrder, eventDispatcher)
+	return deleteOrderUseCase
+}
+
 func NewWebOrderHandler(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *web.WebOrderHandler {
 	orderRepository := database.NewOrderRepository(db)
 	orderCreated := event.NewOrderCreated()
@@ -79,11 +86,18 @@ func NewWebUpdateOrderHandler(db *sql.DB, eventDispatcher events.EventDispatcher
 	return webUpdateOrderHandler
 }
 
+func NewWebDeleteOrderHandler(db *sql.DB, eventDispatcher events.EventDispatcherInterface) *web.WebDeleteOrderHandler {
+	orderRepository := database.NewOrderRepository(db)
+	deleteOrder := event.NewDeleteOrder()
+	webDeleteOrderHandler := web.NewWebDeleteOrderHandler(eventDispatcher, orderRepository, deleteOrder)
+	return webDeleteOrderHandler
+}
+
 // wire.go:
 
 var setOrderRepositoryDependency = wire.NewSet(database.NewOrderRepository, wire.Bind(new(entity.OrderRepositoryInterface), new(*database.OrderRepository)))
 
-var setEventDispatcherDependency = wire.NewSet(events.NewEventDispatcher, event.NewOrderCreated, event.NewOrderList, event.NewGetOrderByID, event.NewOrderUpdate, wire.Bind(new(events.EventInterface), new(*event.OrderCreated)), wire.Bind(new(events.EventInterface), new(*event.OrderList)), wire.Bind(new(events.EventInterface), new(*event.GetOrderByID)), wire.Bind(new(events.EventInterface), new(*event.OrderUpdate)), wire.Bind(new(events.EventDispatcherInterface), new(*events.EventDispatcher)))
+var setEventDispatcherDependency = wire.NewSet(events.NewEventDispatcher, event.NewOrderCreated, event.NewOrderList, event.NewGetOrderByID, event.NewOrderUpdate, event.NewDeleteOrder, wire.Bind(new(events.EventInterface), new(*event.OrderCreated)), wire.Bind(new(events.EventInterface), new(*event.OrderList)), wire.Bind(new(events.EventInterface), new(*event.GetOrderByID)), wire.Bind(new(events.EventInterface), new(*event.OrderUpdate)), wire.Bind(new(events.EventInterface), new(*event.DeleteOrder)), wire.Bind(new(events.EventDispatcherInterface), new(*events.EventDispatcher)))
 
 var setOrderCreatedEvent = wire.NewSet(event.NewOrderCreated, wire.Bind(new(events.EventInterface), new(*event.OrderCreated)))
 
@@ -92,3 +106,5 @@ var setOrderListedEvent = wire.NewSet(event.NewOrderList, wire.Bind(new(events.E
 var setGetOrderByIDEvent = wire.NewSet(event.NewGetOrderByID, wire.Bind(new(events.EventInterface), new(*event.GetOrderByID)))
 
 var setUpdateOrderEvent = wire.NewSet(event.NewOrderUpdate, wire.Bind(new(events.EventInterface), new(*event.OrderUpdate)))
+
+var setDeleteOrderEvent = wire.NewSet(event.NewDeleteOrder, wire.Bind(new(events.EventInterface), new(*event.DeleteOrder)))
