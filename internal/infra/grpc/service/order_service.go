@@ -5,6 +5,7 @@ import (
 
 	"github.com/NayronFerreira/cleanArq_challenge/internal/infra/grpc/pb"
 	"github.com/NayronFerreira/cleanArq_challenge/internal/usecase"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type OrderService struct {
@@ -13,18 +14,21 @@ type OrderService struct {
 	ListOrdersUseCase   usecase.ListOrderUseCase
 	GetOrderByIDUseCase usecase.GetOrderByIDUseCase
 	UpdateOrderUseCase  usecase.UpdateOrderUseCase
+	DeleteOrderUseCase  usecase.DeleteOrderUseCase
 }
 
 func NewOrderService(
 	createOrderUseCase usecase.CreateOrderUseCase,
 	listOrdersUseCase usecase.ListOrderUseCase,
 	getOrderIdUseCase usecase.GetOrderByIDUseCase,
-	updateOrderUseCase usecase.UpdateOrderUseCase) *OrderService {
+	updateOrderUseCase usecase.UpdateOrderUseCase,
+	deleteOrderUseCase usecase.DeleteOrderUseCase) *OrderService {
 	return &OrderService{
 		CreateOrderUseCase:  createOrderUseCase,
 		ListOrdersUseCase:   listOrdersUseCase,
 		GetOrderByIDUseCase: getOrderIdUseCase,
 		UpdateOrderUseCase:  updateOrderUseCase,
+		DeleteOrderUseCase:  deleteOrderUseCase,
 	}
 }
 
@@ -100,4 +104,16 @@ func (s *OrderService) UpdateOrder(ctx context.Context, in *pb.UpdateOrderReques
 		Tax:        float32(output.Tax),
 		FinalPrice: float32(output.FinalPrice),
 	}, nil
+}
+
+func (s *OrderService) DeleteOrder(ctx context.Context, in *pb.DeleteOrderRequest) (*emptypb.Empty, error) {
+	id := usecase.OrderInputDTO{
+		ID: in.Id,
+	}
+
+	if err := s.DeleteOrderUseCase.Execute(id); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
 }
