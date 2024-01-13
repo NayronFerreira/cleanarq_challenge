@@ -15,15 +15,32 @@ A estrutura do projeto é organizada da seguinte forma:
 
 - **pkg/**: Este diretório contém pacotes reutilizáveis em toda a aplicação, como eventos, que podem ser usados em diferentes partes da aplicação.
 
-## Como Executar
+# Executando a Aplicação
 
-Para executar a aplicação, basta rodar o seguinte comando:
+Para executar a aplicação, você precisará ter o Docker e o Docker Compose instalados em sua máquina. Se você ainda não os tem instalados, você pode baixá-los a partir dos seguintes links:
 
-go run main.go wire_gen.go
+- Docker: [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)
+- Docker Compose: [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
 
-Starting web server on port :8000
-Starting gRPC server on port 50051
-Starting GraphQL server on port 8080
+Depois de instalar o Docker e o Docker Compose, siga os passos abaixo para executar a aplicação:
+
+1. Abra um terminal na raiz do projeto, onde o arquivo *docker-compose.yml* está localizado.
+
+2. Execute o seguinte comando para construir e iniciar os serviços definidos no arquivo `docker-compose.yml`:
+
+```bash
+docker-compose up
+```
+
+- A aplicação agora deve estar rodando e acessível no endereço [http://localhost:8080].
+
+Para parar a aplicação, pressione *Ctrl+C* no terminal. 
+
+Se você quiser remover os containers, networks e volumes definidos no arquivo *docker-compose.yml*, execute o seguinte comando:
+
+```bash
+docker-compose down
+```
 
 ## Principais Dependências
 
