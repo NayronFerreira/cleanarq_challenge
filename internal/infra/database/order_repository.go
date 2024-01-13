@@ -16,11 +16,11 @@ func NewOrderRepository(db *sql.DB) *OrderRepository {
 
 func (r *OrderRepository) Save(order *entity.Order) error {
 	createTableStmt := `CREATE TABLE IF NOT EXISTS orders (
-        id INT PRIMARY KEY,
-        price DECIMAL(10,2),
-        tax DECIMAL(10,2),
-        final_price DECIMAL(10,2)
-    )`
+		id VARCHAR(255) PRIMARY KEY,
+		price DECIMAL(10,2),
+		tax DECIMAL(10,2),
+		final_price DECIMAL(10,2)
+	)`
 	_, err := r.Db.Exec(createTableStmt)
 	if err != nil {
 		return err
