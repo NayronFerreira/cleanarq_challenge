@@ -150,42 +150,43 @@ query {
 }
 ```
 
-## Interagindo com o Serviço gRPC
+## Interagindo com o serviço gRPC usando Evans
 
-Para interagir com o serviço gRPC da aplicação CleanArq Challenge, você pode usar a ferramenta evans. 
-Siga as instruções abaixo para usar o evans:
+Para interagir com o serviço gRPC da aplicação usando o Evans, siga as instruções abaixo:
 
-Certifique-se de que a aplicação CleanArq Challenge está em execução e o serviço gRPC está disponível em 127.0.0.1:50051.
+### Iniciando o Evans no modo REPL (Read-Eval-Print Loop)
 
-Execute o evans no terminal:
+Isso iniciará o Evans no modo REPL, permitindo que você interaja com o serviço gRPC da aplicação.
 
-**Isso iniciará o evans no modo REPL (Read-Eval-Print Loop), permitindo que você interaja com o serviço gRPC da aplicação.**
-$ evans -r rpl
+```bash
+evans -r rpl
+```
+*Selecionando o pacote pb e o serviço OrderService*
 
-  ______
- |  ____|
- | |__    __   __   __ _   _ __    ___
- |  __|   \ \ / /  / _. | | '_ \  / __|
- | |____   \ V /  | (_| | | | | | \__ \
- |______|   \_/    \__,_| |_| |_| |___/
+Isso selecionará o pacote pb que contém os serviços gRPC definidos e o serviço *OrderService*.
 
- more expressive universal gRPC client
+```bash
+package pb
+service OrderService
+```
 
+*Chamando métodos do serviço OrderService*
 
-*Isso selecionará o pacote pb que contém os serviços gRPC definidos.*
-127.0.0.1:50051> package pb
+Para chamar métodos do serviço OrderService, como *DeleteOrder, UpdateOrder, CreateOrder, GetOrderByID e ListOrder*, siga o padrão abaixo, substituindo <método> pelo nome do método desejado e fornecendo os parâmetros necessários:
 
+```bash
+call <método>
+```
+Por exemplo, para enviar uma chamada para o método *DeleteOrder* com o parâmetro id definido como 111111111:
 
-*Em seguida, use o comando service para selecionar o serviço gRPC desejado, neste caso, o OrderService:*
-pb@127.0.0.1:50051> service OrderService
+```bash
+call DeleteOrder
+id (TYPE_STRING) => 111111111
+```
 
 Isso enviará uma chamada para o método DeleteOrder com o parâmetro id definido como 111111111.
-pb.OrderService@127.0.0.1:50051> call DeleteOrder
-id (TYPE_STRING) => 111111111
-{}
-$
 
-Para chamar os demais serviços, basta que no momento do *call* troque de DeleteOrder para UpdateOrder, CreateOrder, GetOrderByID e ListOrder.
+Para chamar outros métodos, basta substituir *DeleteOrder por UpdateOrder, CreateOrder, GetOrderByID ou ListOrder* no comando call.
 
 ## Interagindo com API HTTP/Web
 
