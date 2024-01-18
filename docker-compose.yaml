@@ -5,6 +5,8 @@ services:
     build: .
     ports:
       - "8080:8000"
+      - "50051:50051"
+      - "8181:8181"
     depends_on:
       rabbitmq:
         condition: service_healthy
