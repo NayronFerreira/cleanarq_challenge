@@ -35,7 +35,7 @@ docker-compose up
 - A aplicação agora deve estar acessível nos endereços:
 - [http://localhost:8181] - PlayGround GraphQL.
 - [http://localhost:8080] - Web API.
-- [http://localhost:50051] - gRPC API.
+- *evans repl -p 50051* - gRPC API.
 
 Para parar a aplicação, pressione *Ctrl+C* no terminal. 
 
