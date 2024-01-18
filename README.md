@@ -32,7 +32,10 @@ Depois de instalar o Docker e o Docker Compose, siga os passos abaixo para execu
 docker-compose up
 ```
 
-- A aplicação agora deve estar rodando e acessível no endereço [http://localhost:8080].
+- A aplicação agora deve estar acessível nos endereços:
+- [http://localhost:8181] - PlayGround GraphQL.
+- [http://localhost:8080] - Web API.
+- [http://localhost:50051] - gRPC API.
 
 Para parar a aplicação, pressione *Ctrl+C* no terminal. 
 
@@ -41,22 +44,6 @@ Se você quiser remover os containers, networks e volumes definidos no arquivo *
 ```bash
 docker-compose down
 ```
-
-## Principais Dependências
-
-Este projeto utiliza as seguintes dependências:
-
-*gqlgen v0.17.41*: Uma biblioteca para construir servidores GraphQL em Go.
-*chi v5.0.11*: Um pacote para criação de rotas HTTP em Go.
-*mysql v1.7.1*: Um driver para MySQL para a biblioteca de banco de dados sql do Go.
-*protobuf v1.5.3*: A implementação Go do Google Protocol Buffers.
-*uuid v1.4.0*: Uma biblioteca para geração de UUIDs.
-*wire v0.5.0*: Uma biblioteca para injeção de dependência em Go.
-*amqp091-go v1.9.0*: Uma biblioteca para trabalhar com o RabbitMQ em Go.
-*viper v1.18.2*: Uma biblioteca para configuração de aplicativos em Go.
-*gqlparser v2.5.10*: Um parser para GraphQL em Go.
-*grpc v1.60.1*: A implementação Go do gRPC: um sistema de RPC de alto desempenho.
-*protobuf v1.32.0*: A implementação Go do Google Protocol Buffers.
 
 ## Casos de Uso
 
@@ -75,7 +62,7 @@ A aplicação possui os seguintes casos de uso:
 ## Exemplos de Uso
 
 A aplicação fornece uma API GraphQL para interação com os pedidos. Abaixo estão alguns exemplos de consultas e mutações que podem ser realizadas:
-O GraphQL Playground pode ser acessada no endereço http://localhost:8080/.
+O GraphQL Playground pode ser acessada no endereço [http://localhost:8181/].
 
 **Consultar Todos os Pedidos**:
 
@@ -235,3 +222,19 @@ Além das interfaces *GraphQL* e *gRPC*, a aplicação também possui uma interf
   "id": "111111111111"
 }
 ```
+
+## Principais Dependências
+
+Este projeto utiliza as seguintes dependências:
+
+*gqlgen v0.17.41*: Uma biblioteca para construir servidores GraphQL em Go.
+*chi v5.0.11*: Um pacote para criação de rotas HTTP em Go.
+*mysql v1.7.1*: Um driver para MySQL para a biblioteca de banco de dados sql do Go.
+*protobuf v1.5.3*: A implementação Go do Google Protocol Buffers.
+*uuid v1.4.0*: Uma biblioteca para geração de UUIDs.
+*wire v0.5.0*: Uma biblioteca para injeção de dependência em Go.
+*amqp091-go v1.9.0*: Uma biblioteca para trabalhar com o RabbitMQ em Go.
+*viper v1.18.2*: Uma biblioteca para configuração de aplicativos em Go.
+*gqlparser v2.5.10*: Um parser para GraphQL em Go.
+*grpc v1.60.1*: A implementação Go do gRPC: um sistema de RPC de alto desempenho.
+*protobuf v1.32.0*: A implementação Go do Google Protocol Buffers.
