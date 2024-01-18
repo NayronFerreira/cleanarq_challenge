@@ -25,6 +25,7 @@ services:
     image: mysql:5.7
     volumes:
       - db_data:/var/lib/mysql
+      - ./path/to/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: orders
