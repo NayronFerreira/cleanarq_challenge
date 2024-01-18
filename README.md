@@ -141,21 +141,20 @@ query {
 
 Para interagir com o serviço gRPC da aplicação usando o Evans, siga as instruções abaixo:
 
-### Iniciando o Evans no modo REPL (Read-Eval-Print Loop)
+O docker-compose ja sobe um container com a imagem do Evans.
 
-Isso iniciará o Evans no modo REPL, permitindo que você interaja com o serviço gRPC da aplicação.
-
-```bash
-evans -r rpl
-```
-*Selecionando o pacote pb e o serviço OrderService*
-
-Isso selecionará o pacote pb que contém os serviços gRPC definidos e o serviço *OrderService*.
+Para realizar as chamadas usando o evans, basta rodar no terminal os comands abaixo a partir de qualquer diretorio:
 
 ```bash
+docker-compose exec evans sh
+
+evans repl -p 50051
+
 package pb
+
 service OrderService
 ```
+Isso selecionará o pacote pb que contém os serviços gRPC definidos e o serviço *OrderService*.
 
 *Chamando métodos do serviço OrderService*
 

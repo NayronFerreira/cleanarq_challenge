@@ -31,9 +31,11 @@ services:
     ports:
       - "3306:3306"
   evans:
-    image: heavywatal/evans
+    image: ghcr.io/ktr0731/evans
     depends_on:
       - app
     command: ["grpc", "--host", "app", "--port", "50051"]
     volumes:
       - ./internal/infra/grpc/protofiles:/protofiles
+volumes:
+  db_data: {}
